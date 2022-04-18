@@ -38,24 +38,24 @@
         android:rowCount="6">
 
         <Button
-            android:id="@+id/buttonLeftBracket"
+            android:id="@+id/buttonSquareRoot"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_row="0"
             android:layout_column="0"
             android:layout_columnWeight="1"
-            android:text="("
+            android:text="2√"
             android:textColor="#1A237E"
             android:textSize="30sp"></Button>
 
         <Button
-            android:id="@+id/buttonRightBracket"
+            android:id="@+id/buttonRoot"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_row="0"
             android:layout_column="1"
             android:layout_columnWeight="1"
-            android:text=")"
+            android:text="√"
             android:textColor="#1A237E"
             android:textSize="30sp"></Button>
 

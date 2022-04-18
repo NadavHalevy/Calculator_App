@@ -8,13 +8,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-/*import java.util.ArrayList;
-import java.util.List;*/
+
+// TODO: 4/18/2022 fix: 1. number after equals 2. root 3. power 4. write to exercise 5. write exercise with 2 operator or more 6. dot after equal 7. equal with first number only
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9,
-            buttonLeftBracket, buttonRightBracket, buttonSquared, buttonInPower,
+            buttonSquareRoot, buttonRoot, buttonSquared, buttonInPower,
             buttonAC, buttonDel, buttonDot, buttonDiv, buttonMulti,
             buttonMinus, buttonPlus, buttonEqual;
 
@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     double firstNum = 0, lastNum = 0;
 
-    int countBracket = 0, countDot = 0;
-   // List<Double> listNumbers = new ArrayList<Double>();
+    int countDot = 0;
+
     DecimalFormat mf = new DecimalFormat("#####.#####");
 
     String exercise, currentResult;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         buttonMulti = findViewById(R.id.buttonMulti);
         buttonMinus = findViewById(R.id.buttonMinus);
         buttonPlus = findViewById(R.id.buttonPlus);
-        buttonLeftBracket = findViewById(R.id.buttonLeftBracket);
-        buttonRightBracket = findViewById(R.id.buttonRightBracket);
+        buttonSquareRoot = findViewById(R.id.buttonSquareRoot);
+        buttonRoot = findViewById(R.id.buttonRoot);
         buttonDot = findViewById(R.id.buttonPoint);
         buttonSquared = findViewById(R.id.buttonSquared);
         buttonInPower = findViewById(R.id.buttonInPower);
@@ -88,7 +88,13 @@ public class MainActivity extends AppCompatActivity {
 
         btn8.setOnClickListener(view -> numberClick("8"));
 
-        btn9.setOnClickListener(view -> numberClick("9"));
+        btn9.setOnClickListener(view -> {
+        
+            if(!btnEqualsCheck)
+
+                numberClick("9");
+
+            } );
 
         buttonEqual.setOnClickListener(view -> {
 
@@ -99,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             operator = false;
-           // countDot = 1;
             btnEqualsCheck = true;
         });
 
@@ -146,15 +151,44 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        buttonDiv.setOnClickListener(view -> {
+        buttonDot.setOnClickListener(view -> {
+
+            if(countDot == 0) {
+                if (number == null) {
+                    number = "0.";
+                } else {
+                    number += ".";
+                }
+                countDot++;
+            }
+            textViewResult.setText(number);
+        });
+
+        buttonPlus.setOnClickListener(view -> {
 
             exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
-            textViewExercise.setText(exercise + currentResult + "/");
+            textViewExercise.setText(exercise + currentResult + "+");
+            if (operator) {
+
+                status = "sum";
+                checkOperator();
+
+            }
+
+            operator = false;
+            number = null;
+
+        });
+
+        buttonMinus.setOnClickListener(view -> {
+                        exercise = textViewExercise.getText().toString();
+            currentResult = textViewResult.getText().toString();
+            textViewExercise.setText(exercise + currentResult + "-");
 
             if (operator) {
 
-                status = "div";
+                status = "sub";
                 checkOperator();
 
             }
@@ -182,15 +216,15 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        buttonMinus.setOnClickListener(view -> {
+        buttonDiv.setOnClickListener(view -> {
 
             exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
-            textViewExercise.setText(exercise + currentResult + "-");
+            textViewExercise.setText(exercise + currentResult + "/");
 
             if (operator) {
 
-                status = "sub";
+                status = "div";
                 checkOperator();
 
             }
@@ -198,44 +232,6 @@ public class MainActivity extends AppCompatActivity {
             operator = false;
             number = null;
 
-        });
-
-        buttonPlus.setOnClickListener(view -> {
-
-            exercise = textViewExercise.getText().toString();
-            currentResult = textViewResult.getText().toString();
-            textViewExercise.setText(exercise + currentResult + "+");
-            if (operator) {
-
-                status = "sum";
-                checkOperator();
-
-            }
-
-            operator = false;
-            number = null;
-
-        });
-
-        buttonLeftBracket.setOnClickListener(view -> {
-
-        });
-
-        buttonRightBracket.setOnClickListener(view -> {
-
-        });
-
-        buttonDot.setOnClickListener(view -> {
-
-            if(countDot == 0) {
-                if (number == null) {
-                    number = "0.";
-                } else {
-                    number += ".";
-                }
-                countDot++;
-            }
-            textViewResult.setText(number);
         });
 
         buttonSquared.setOnClickListener(view -> {
@@ -257,10 +253,46 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonInPower.setOnClickListener(view -> {
+        // TODO: 4/18/2022 fix btn in power
 
             exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
             textViewExercise.setText(exercise + currentResult + "^");
+
+            if (operator) {
+
+                status = "power";
+                firstNum = Double.parseDouble(textViewResult.getText().toString());
+                checkOperator();
+
+            }
+
+            operator = false;
+            number = null;
+        });
+
+        buttonSquareRoot.setOnClickListener(view -> {
+
+            exercise = textViewExercise.getText().toString();
+            currentResult = textViewResult.getText().toString();
+            textViewExercise.setText(exercise + "2√" + currentResult );
+
+            if (operator) {
+
+                status = "squareRoot";
+                checkOperator();
+
+            }
+
+            operator = false;
+            number = null;
+        });
+
+        buttonRoot.setOnClickListener(view -> {
+        // TODO: 4/18/2022 fix btn root
+            exercise = textViewExercise.getText().toString();
+            currentResult = textViewResult.getText().toString();
+            textViewExercise.setText(exercise + currentResult + "√");
 
             if (operator) {
 
@@ -323,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void multi(){
 
-        if(firstNum == 0){
+        if ( firstNum == 0){
             firstNum = 1;
             lastNum = Double.parseDouble(textViewResult.getText().toString());
             firstNum = firstNum * lastNum;
@@ -362,23 +394,33 @@ public class MainActivity extends AppCompatActivity {
         if (firstNum == 0 ){
             firstNum = Double.parseDouble(textViewResult.getText().toString());
         }
+
         lastNum = Double.parseDouble(textViewResult.getText().toString());
         Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
         firstNum = Math.pow(firstNum, lastNum);
 
         showResult();
+        Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
+    }
+
+    public void squareRoot(){
+
+        lastNum = Double.parseDouble(textViewResult.getText().toString());
+        firstNum = Math.pow(lastNum, 0.5);
+        showResult();
 
     }
 
-    public void leftBracket(){
+    public void root(){
 
-        countBracket++;
+        if (firstNum == 0 ){
+            firstNum = Double.parseDouble(textViewResult.getText().toString());
+        }
+        lastNum = Double.parseDouble(textViewResult.getText().toString());
+        Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
+        firstNum = Math.pow(firstNum, 1/lastNum);
 
-    }
-
-    public void rightBracket(){
-
-        countBracket--;
+        showResult();
 
     }
 
@@ -402,6 +444,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "power":
                 power();
+                break;
+            case "squareRoot":
+                squareRoot();
+                break;
+            case "root":
+                root();
                 break;
             default:
                 firstNum = Double.parseDouble(textViewResult.getText().toString());
