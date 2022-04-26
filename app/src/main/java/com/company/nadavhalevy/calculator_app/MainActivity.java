@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-// TODO: 4/18/2022 fix: 1. number after equals 2. root 3. power 4. write to exercise 5. write exercise with 2 operator or more 6. dot after equal 7. equal with first number only
+// TODO: 4/18/2022 fix: 1. number after equals 3. write to exercise 4. write exercise with 2 operator or more 5. dot after equal 6. equal with first number only
 
 public class MainActivity extends AppCompatActivity {
 
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 checkOperator();
 
             }
+            Log.d("check", "firstNum: " +firstNum + ", lastnum: " + lastNum + ", result: " + Math.pow(firstNum,  lastNum));
 
             operator = false;
             btnEqualsCheck = true;
@@ -182,7 +183,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonMinus.setOnClickListener(view -> {
-                        exercise = textViewExercise.getText().toString();
+
+            exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
             textViewExercise.setText(exercise + currentResult + "-");
 
@@ -253,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonInPower.setOnClickListener(view -> {
-        // TODO: 4/18/2022 fix btn in power
 
             exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
             if (operator) {
 
                 status = "power";
-                firstNum = Double.parseDouble(textViewResult.getText().toString());
+                //firstNum = Double.parseDouble(textViewResult.getText().toString());
                 checkOperator();
 
             }
@@ -289,14 +290,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonRoot.setOnClickListener(view -> {
-        // TODO: 4/18/2022 fix btn root
             exercise = textViewExercise.getText().toString();
             currentResult = textViewResult.getText().toString();
             textViewExercise.setText(exercise + currentResult + "√");
 
             if (operator) {
 
-                status = "power";
+                status = "root";
                 checkOperator();
 
             }
@@ -393,14 +393,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (firstNum == 0 ){
             firstNum = Double.parseDouble(textViewResult.getText().toString());
-        }
-
+        } else {
         lastNum = Double.parseDouble(textViewResult.getText().toString());
-        Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
         firstNum = Math.pow(firstNum, lastNum);
-
+    }
         showResult();
-        Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
     }
 
     public void squareRoot(){
@@ -412,14 +409,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void root(){
-
+        Log.d("check1", "firstNum: " +firstNum );
         if (firstNum == 0 ){
             firstNum = Double.parseDouble(textViewResult.getText().toString());
-        }
+        }else {
+            lastNum = Double.parseDouble(textViewResult.getText().toString());
+            lastNum = (1 / lastNum);
+            firstNum = Math.pow(firstNum, lastNum);
+
+        }/*
         lastNum = Double.parseDouble(textViewResult.getText().toString());
         Log.d("check", "firstNum:" +firstNum + ", lastnum:" + lastNum);
-        firstNum = Math.pow(firstNum, 1/lastNum);
-
+        firstNum = Math.pow(firstNum, 1/lastNum);*/
+        Log.d("check", "firstNum: " +firstNum + ", lastnum: " + lastNum + ", result: " + Math.pow(firstNum,  lastNum));
         showResult();
 
     }
