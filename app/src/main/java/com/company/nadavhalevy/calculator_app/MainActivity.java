@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         buttonEqual.setClickable(false);
 
+        // What is the action while pressing the number buttons
+
         btn0.setOnClickListener(view -> {
 
             if(!btnEqualsCheck) {
@@ -162,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
             } );
 
+        // What is the action when you press the operator buttons
+
         buttonEqual.setOnClickListener(view -> {
             if(countNumClick > 1)
             {
@@ -188,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                         + "Please start from the beginning", Toast.LENGTH_LONG).show();
             }
         });
-
 
         buttonAC.setOnClickListener(view -> {
 
@@ -419,6 +422,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // What does the action perform in reality
+
     public void numberClick(String view) {
 
         if (number == null) {
@@ -579,6 +584,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    // Avoid duplicating code
 
     public void showResult() {
 
