@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-// TODO: 4/18/2022 fix: 1. order of operations in exercise 2. dot after equal 3. equal with first number only
+// TODO: 4/18/2022 fix: 1. Fix a crash of the app when you click Equally No Exercise 
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,13 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
     double firstNum = 0, lastNum = 0;
 
-    int countDot = 0;
+    boolean checkDot = true;
 
     DecimalFormat mf = new DecimalFormat("#####.#####");
 
     String exercise, currentResult;
 
     boolean btnACCheck = true, btnEqualsCheck = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
 
             } );
 
+
         buttonEqual.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck) {
+            if (!btnEqualsCheck) {
                 exercise = textViewExercise.getText().toString();
                 currentResult = textViewResult.getText().toString();
                 textViewExercise.setText(exercise + currentResult);
             }
-
             if (operator) {
 
                 checkOperator();
@@ -159,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
             }
             operator = false;
             btnEqualsCheck = true;
+
+
         });
 
         buttonAC.setOnClickListener(view -> {
@@ -170,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             textViewExercise.setText("");
             firstNum = 0;
             lastNum = 0;
-            countDot = 0;
+            checkDot = true;
             btnACCheck = true;
             btnEqualsCheck = false;
 
@@ -183,49 +188,53 @@ public class MainActivity extends AppCompatActivity {
 
                 textViewResult.setText("0");
 
-            }else{
+            }else {
 
-                number = number.substring(0, number.length()-1);
+                number = number.substring(0, number.length() - 1);
 
-                if(number.length() == 0){
+                if (number.length() == 0) {
 
                     buttonDel.setClickable(false);
 
-                }else if(number.contains(".")){
+               }else if(number.contains(".")){
 
-                    countDot = 1;
+                    checkDot = false;
 
                 }else{
 
-                    countDot = 0;
+                    checkDot = true;
+
 
                 }
             }
-
             textViewResult.setText(number);
 
         });
 
         buttonDot.setOnClickListener(view -> {
 
+            if (!btnEqualsCheck) {
+                if (!number.contains(".")) {
 
-            if(countDot == 0) {
-                if (number == null) {
-                    number = "0.";
-                } else {
-                    number += ".";
+                    if (number == null) {
+                        number = "0.";
+                    } else {
+                        number += ".";
+                    }
+                    textViewResult.setText(number);
+                    checkDot = false;
                 }
-                countDot++;
+            }else
+            {
+                Toast.makeText(getApplicationContext(), "You can not click on a dot after an equal", Toast.LENGTH_LONG).show();
+
             }
-            textViewResult.setText(number);
+
         });
 
         buttonPlus.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("+");
-            else
-                afterEqual("+");
+           statusEqual("+");
 
             if (operator) {
 
@@ -234,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "sum";
             operator = false;
             number = null;
 
@@ -241,10 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonMinus.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("-");
-            else
-                afterEqual("-");
+            statusEqual("-");
 
             if (operator) {
 
@@ -253,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "sub";
             operator = false;
             number = null;
 
@@ -260,10 +268,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonMulti.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("*");
-            else
-                afterEqual("*");
+            statusEqual("*");
 
             if (operator) {
 
@@ -272,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "multi";
             operator = false;
             number = null;
 
@@ -279,11 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonDiv.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("/");
-            else
-                afterEqual("/");
-
+            statusEqual("/");
 
             if (operator) {
 
@@ -292,36 +294,39 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "div";
             operator = false;
             number = null;
 
         });
 
         buttonSquared.setOnClickListener(view -> {
+            if (!btnEqualsCheck) {
 
-            if(!btnEqualsCheck)
-                beforeEqual("^2");
-            else
-                afterEqual("^2");
+                statusEqual("^2");
 
-            if (operator) {
+                if (operator) {
+
+                    status = "square";
+                    checkOperator();
+
+                }
 
                 status = "square";
-                checkOperator();
+                operator = false;
+                number = null;
+
+            }else
+            {
+                Toast.makeText(getApplicationContext(), "You can not click on a square after an equal", Toast.LENGTH_LONG).show();
 
             }
-
-            operator = false;
-            number = null;
 
         });
 
         buttonInPower.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("^");
-            else
-                afterEqual("^");
+            statusEqual("^");
 
             if (operator) {
 
@@ -330,35 +335,39 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "power";
             operator = false;
             number = null;
         });
 
         buttonSquareRoot.setOnClickListener(view -> {
+            if (!btnEqualsCheck) {
 
-            if(!btnEqualsCheck)
-                beforeEqual("2√");
-            else
-                afterEqual("2√");
+                statusEqual("2√");
 
 
-            if (operator) {
+                if (operator) {
+
+                    status = "squareRoot";
+                    checkOperator();
+
+                }
 
                 status = "squareRoot";
-                checkOperator();
+                operator = false;
+                number = null;
+
+            }else
+            {
+                Toast.makeText(getApplicationContext(), "You can not click on a square root after an equal", Toast.LENGTH_LONG).show();
 
             }
 
-            operator = false;
-            number = null;
         });
 
         buttonRoot.setOnClickListener(view -> {
 
-            if(!btnEqualsCheck)
-                beforeEqual("√");
-            else
-                afterEqual("√");
+            statusEqual("√");
 
             if (operator) {
 
@@ -367,6 +376,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            status = "root";
             operator = false;
             number = null;
         });
@@ -404,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
         lastNum = Double.parseDouble(textViewResult.getText().toString());
         firstNum = firstNum + lastNum;
         showResult();
+
 
     }
 
@@ -443,8 +454,18 @@ public class MainActivity extends AppCompatActivity {
             lastNum = Double.parseDouble(textViewResult.getText().toString());
             firstNum = firstNum / lastNum;
         }
-        showResult();
-
+        Log.d("check", "lastNUm: " + lastNum);
+        if(lastNum == 0.0){
+            buttonAC.post(new Runnable(){
+                @Override
+                public void run() {
+                    buttonAC.performClick();
+                }
+            });
+            Toast.makeText(getApplicationContext(), "It is not possible to divide a number by 0", Toast.LENGTH_LONG).show();
+        }else{
+            showResult();
+        }
     }
 
     public void square(){
@@ -528,8 +549,16 @@ public class MainActivity extends AppCompatActivity {
 
         textViewResult.setText(mf.format(firstNum));
         lastNum = firstNum;
-        countDot = 0;
+        checkDot = true;
 
+    }
+
+    public void statusEqual(String ope){
+
+        if(!btnEqualsCheck)
+            beforeEqual(ope);
+        else
+            afterEqual(ope);
     }
 
     public void beforeEqual(String ope){
@@ -542,14 +571,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void afterEqual(String ope){
 
-
         btnEqualsCheck = false;
         exercise = textViewExercise.getText().toString();
         currentResult = textViewResult.getText().toString();
         textViewExercise.setText(exercise + ope);
 
     }
-
-
-
 }
