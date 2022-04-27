@@ -3,15 +3,12 @@ package com.company.nadavhalevy.calculator_app;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
-// TODO: 4/18/2022 fix: 1. Fix a crash of the app when you click dot before, and after equal.
-// TODO: 4/18/2022 fix: 1. Fix a crash of the app when you click dot before, and after equal.
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("0");
                 countNumClick++;
-                Log.d("check", "countNumClick 0: " + countNumClick);
-
             }
         });
 
@@ -92,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("1");
                 countNumClick++;
-                Log.d("check", "countNumClick 1: " + countNumClick);
-
             }
 
         });
@@ -103,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("2");
                 countNumClick++;
-                Log.d("check", "countNumClick 2: " + countNumClick);
             }
         });
 
@@ -112,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("3");
                 countNumClick++;
-                Log.d("check", "countNumClick 3: " + countNumClick);
             }
 
         });
@@ -122,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("4");
                 countNumClick++;
-                Log.d("check", "countNumClick 4: " + countNumClick);
             }
 
         });
@@ -132,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("5");
                 countNumClick++;
-                Log.d("check", "countNumClick 5: " + countNumClick);
             }
 
         });
@@ -142,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("6");
                 countNumClick++;
-                Log.d("check", "countNumClick 6: " + countNumClick);
             }
 
         });
@@ -152,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("7");
                 countNumClick++;
-                Log.d("check", "countNumClick 7: " + countNumClick);
             }
 
         });
@@ -162,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("8");
                 countNumClick++;
-                Log.d("check", "countNumClick 8: " + countNumClick);
             }
 
         });
@@ -172,43 +158,36 @@ public class MainActivity extends AppCompatActivity {
             if(!btnEqualsCheck) {
                 numberClick("9");
                 countNumClick++;
-                Log.d("check", "countNumClick 9: " + countNumClick);
             }
 
             } );
 
-            buttonEqual.setOnClickListener(view -> {
-                if(countNumClick > 1)
-                {
-                    if (!btnEqualsCheck) {
-                        exercise = textViewExercise.getText().toString();
-                        currentResult = textViewResult.getText().toString();
-                        textViewExercise.setText(exercise + currentResult);
-                    }
-                    if (operator) {
-
-                        checkOperator();
-
-                    }
-
-                    operator = false;
-                    btnEqualsCheck = true;
-                    countNumClick = 1;
-                    buttonEqual.setClickable(false);
+        buttonEqual.setOnClickListener(view -> {
+            if(countNumClick > 1)
+            {
+                if (!btnEqualsCheck) {
+                    exercise = textViewExercise.getText().toString();
+                    currentResult = textViewResult.getText().toString();
+                    textViewExercise.setText(exercise + currentResult);
                 }
-                else
-                {
-                    Log.d("check", "countNumClick:" + countNumClick);
-                    buttonAC.post(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                          buttonAC.performClick();
-                                      }
-                                  });
-                    Toast.makeText(getApplicationContext(), "You clicked equal before the time." +   "\n"
-                            + "Please start from the beginning", Toast.LENGTH_LONG).show();
+                if (operator) {
+
+                    checkOperator();
+
                 }
-            });
+
+                operator = false;
+                btnEqualsCheck = true;
+                countNumClick = 1;
+                buttonEqual.setClickable(false);
+            }
+            else
+            {
+                buttonAC.post(() -> buttonAC.performClick());
+                Toast.makeText(getApplicationContext(), "You clicked equal before the time." +   "\n"
+                        + "Please start from the beginning", Toast.LENGTH_LONG).show();
+            }
+        });
 
 
         buttonAC.setOnClickListener(view -> {
@@ -220,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             textViewExercise.setText("");
             firstNum = 0;
             lastNum = 0;
+            countNumClick = 0;
             checkDot = true;
             btnACCheck = true;
             btnEqualsCheck = false;
@@ -258,23 +238,34 @@ public class MainActivity extends AppCompatActivity {
 
         buttonDot.setOnClickListener(view -> {
 
-            if (!btnEqualsCheck) {
-                if (!number.contains(".")) {
-
-                    if (number == null) {
-                        number = "0.";
-                    } else {
-                        number += ".";
+            if (!btnEqualsCheck)
+            {
+                if (countNumClick > 0 )
+                {
+                    if (!number.contains(".") || number.isEmpty()) {
+                        if (number == null) {
+                            number = "0.";
+                        } else {
+                            number += ".";
+                        }
+                        textViewResult.setText(number);
+                        checkDot = false;
                     }
+                }
+                else
+                {
+                    number = "0.";
                     textViewResult.setText(number);
                     checkDot = false;
+
                 }
-            }else
-            {
-                Toast.makeText(getApplicationContext(), "You can not click on a dot after an equal", Toast.LENGTH_LONG).show();
-
             }
-
+            else
+            {
+                buttonAC.post(() -> buttonAC.performClick());
+                Toast.makeText(getApplicationContext(), "You can not click on a dot after an equal." +   "\n"
+                        + "Please start from the beginning", Toast.LENGTH_LONG).show();
+            }
         });
 
         buttonPlus.setOnClickListener(view -> {
@@ -499,7 +490,6 @@ public class MainActivity extends AppCompatActivity {
             lastNum = Double.parseDouble(textViewResult.getText().toString());
             firstNum = firstNum / lastNum;
         }
-        Log.d("check", "lastNUm: " + lastNum);
         if(lastNum == 0.0){
             buttonAC.post(new Runnable(){
                 @Override
